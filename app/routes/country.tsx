@@ -15,7 +15,7 @@ export async function clientLoader({ params }: Route.LoaderArgs) {
 }
 
 const Country = ({ loaderData }: Route.ComponentProps) => {
-  console.log({ object: loaderData });
+  // console.log({ object: loaderData });
 
   const country = {
     name: loaderData[0]?.name?.common || "N/A",

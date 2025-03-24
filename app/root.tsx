@@ -44,10 +44,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <div className="h-screen w-screen">
+    <main className="h-screen w-screen">
       <Navbar />
       <Outlet />
-    </div>
+    </main>
   );
 }
 

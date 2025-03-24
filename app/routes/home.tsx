@@ -21,15 +21,14 @@ const Home = () => {
                   Real-Time Data
                 </span>
               </h1>
-              <p className="mx-auto text-base text-gray-500 sm:max-w-md lg:text-xl">
-                Discover details about every country around the world – from
+              <p className="mx-auto text-base text-gray-500 text-left lg:text-xl">
+                Discover details about every country around the <br /> world – from
                 capitals to regions!
               </p>
               <div className="flex flex-col sm:flex-row sm:space-x-4">
-                <Link
-                  to="/countries"
-                  className="flex items-center justify-center px-6 py-3 text-lg text-white bg-indigo-600 rounded-md hover:bg-indigo-700"
-                >
+                <Link to="/countries"
+                  className="flex items-center justify-center px-5 py-2 text-lg text-white bg-indigo-600 rounded-md hover:bg-indigo-700
+                  transition-all">
                   Explore Now
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -45,10 +44,8 @@ const Home = () => {
                     <polyline points="12 5 19 12 12 19"></polyline>
                   </svg>
                 </Link>
-                <Link
-                  to="/about"
-                  className="flex items-center px-6 py-3 text-gray-500 bg-gray-100 rounded-md hover:bg-gray-200 hover:text-gray-600"
-                >
+                <Link to="/about"
+                  className="flex items-center px-5 py-2 text-gray-500 bg-gray-100 rounded-md hover:bg-gray-200 hover:text-gray-600 transition-all">
                   Learn More
                 </Link>
               </div>
@@ -56,10 +53,8 @@ const Home = () => {
           </div>
           <div className="w-full md:w-1/2">
             <div className="overflow-hidden rounded-md shadow-xl">
-              <img
-                src="https://image.winudf.com/v2/image/Ymx1ZWNhcC5pbWFnZXouYmVhdXRpZnVsX2NvdW50cmllc193YWxscGFwZXJzX3NjcmVlbl8wXzlpMW14OWl1/screen-0.webp?fakeurl=1&type=.webp"
-                alt="Explore countries"
-                className="w-full h-auto"
+              <img src="https://image.winudf.com/v2/image/Ymx1ZWNhcC5pbWFnZXouYmVhdXRpZnVsX2NvdW50cmllc193YWxscGFwZXJzX3NjcmVlbl8wXzlpMW14OWl1/screen-0.webp?fakeurl=1&type=.webp"
+                alt="Explore countries" className="w-full h-auto"
               />
             </div>
           </div>

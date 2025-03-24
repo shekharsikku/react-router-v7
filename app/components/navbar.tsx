@@ -19,7 +19,7 @@ const Navbar = () => {
             }>About</NavLink>
             <NavLink to="/countries" className={({ isActive }) =>
               isActive ? "text-blue-500 font-medium" : "text-gray-500"
-            }>Countries</NavLink>
+            } end>Countries</NavLink>
           </nav>
         </div>
       </div>

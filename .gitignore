@@ -11,4 +11,6 @@
 # .idea
 .idea
 
-# git add --all -- ':!.env'
+# .env
+.env
+*.local

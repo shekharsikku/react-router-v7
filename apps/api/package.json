@@ -25,6 +25,7 @@
     "hono": "^4.11.5",
     "hono-rate-limiter": "^0.4.2",
     "postgres": "^3.4.7",
+    "redis": "^5.10.0",
     "zod": "^3.24.4"
   },
   "devDependencies": {

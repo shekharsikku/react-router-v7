@@ -1,0 +1,23 @@
+{
+  "name": "@repo/shared",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --build --clean && tsc --build && tsc-alias"
+  },
+  "exports": {
+    "./redis": {
+      "default": "./dist/configs/redis.js",
+      "types": "./dist/configs/redis.d.ts"
+    },
+    "./tsconfig.base.json": "./tsconfig.base.json"
+  },
+  "dependencies": {
+    "redis": "^5.10.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "tsc-alias": "^1.8.16",
+    "typescript": "5.8.3"
+  }
+}

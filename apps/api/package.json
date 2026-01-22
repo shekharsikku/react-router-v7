@@ -13,7 +13,6 @@
     "push": "drizzle-kit push"
   },
   "dependencies": {
-    "@repo/shared": "workspace:*",
     "@hono/node-server": "^1.19.9",
     "@hono/zod-validator": "^0.7.5",
     "@sapphire/snowflake": "^3.5.5",

@@ -5,6 +5,7 @@ import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import env from "#/configs/env.js";
 import routes from "#/routes/index.js";
+import { pubClient } from "#/configs/redis.js";
 import { HttpError, ErrorResponse, SuccessResponse } from "#/utils/response.js";
 
 const app = new Hono({ strict: env.STRICT_MODE });
@@ -44,6 +45,12 @@ app.use(
     },
   })
 );
+
+app.get("/", async (c) => {
+  const payload = { message: "Hello Hono!" };
+  const res = await pubClient.publish("notifications", JSON.stringify(payload));
+  return c.json({ ...payload, res });
+});
 
 app.get("/hello", (ctx: Context) => {
   const name = ctx.req.query("name") ?? "Stranger";

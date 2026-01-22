@@ -1,0 +1,18 @@
+{
+  "name": "streamline-turbo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "start": "turbo run start",
+    "check": "prettier --check .",
+    "write": "prettier --write ."
+  },
+  "devDependencies": {
+    "prettier": "^3.7.4",
+    "turbo": "^2.7.3",
+    "typescript": "^5.9.3"
+  },
+  "packageManager": "pnpm@10.27.0"
+}

@@ -1,0 +1,36 @@
+{
+  "name": "@repo/api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc --build --clean && tsc --build && tsc-alias",
+    "start": "node dist/index.js",
+    "generate": "drizzle-kit generate",
+    "migrate": "drizzle-kit migrate",
+    "studio": "drizzle-kit studio",
+    "drop": "drizzle-kit drop",
+    "push": "drizzle-kit push"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.19.9",
+    "@hono/zod-validator": "^0.7.5",
+    "@sapphire/snowflake": "^3.5.5",
+    "argon2": "^0.44.0",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.43.1",
+    "drizzle-zod": "^0.7.1",
+    "envalid": "^8.0.0",
+    "hono": "^4.11.5",
+    "hono-rate-limiter": "^0.4.2",
+    "postgres": "^3.4.7",
+    "zod": "^3.24.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "drizzle-kit": "^0.31.1",
+    "tsc-alias": "^1.8.16",
+    "tsx": "^4.7.1",
+    "typescript": "5.8.3"
+  }
+}

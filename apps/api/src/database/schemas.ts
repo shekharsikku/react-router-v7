@@ -1,4 +1,5 @@
 import { pgTable, bigint, varchar, text, boolean, timestamp, pgEnum, uniqueIndex, index } from "drizzle-orm/pg-core";
+import type { InferSelectModel } from "drizzle-orm";
 import { Snowflake } from "@sapphire/snowflake";
 
 export function generateSnowflake() {
@@ -71,3 +72,6 @@ export const tokens = pgTable(
     },
   ]
 );
+
+export type Users = InferSelectModel<typeof users>;
+export type Tokens = InferSelectModel<typeof tokens>;

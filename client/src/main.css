@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+#root {
+  @apply h-screen w-screen grid place-content-center;
+}

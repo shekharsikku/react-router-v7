@@ -1,9 +1,14 @@
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import env from "./utils/env.js";
 
 const app = express();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 app.use(
   cors({
@@ -39,10 +44,11 @@ if (env.NODE_ENV === "development") {
   );
 }
 
-app.get("/hello", (req, res) => {
+app.get("/hello", async (req, res) => {
   const to = req.query.to ?? "Unknown";
   const ts = new Date().toISOString();
   const message = `Node + Express says hello to ${to} at ${ts}!`;
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   return res.status(200).json({ message });
 });
 

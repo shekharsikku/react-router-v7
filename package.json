@@ -4,6 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon",
+    "prebuild": "npm install --include=dev --prefix client",
+    "build": "npm run build --prefix client",
     "start": "node src/index.js"
   },
   "dependencies": {

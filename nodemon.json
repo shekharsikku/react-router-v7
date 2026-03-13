@@ -2,6 +2,6 @@
   "watch": ["src"],
   "ignore": ["node_modules", "public"],
   "ext": ".js, .json",
-  "exec": "node src/index.js",
+  "exec": "node --env-file=.env src/index.js",
   "delay": 1000
 }

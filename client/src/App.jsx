@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 
+const serverUrl = import.meta.env.VITE_SERVER_URL;
+
 const App = () => {
   const [message, setMessage] = useState("Hello, World!");
 
   useEffect(() => {
     (async () => {
       try {
-        const result = await fetch("http://localhost:4000/hello", {
+        const result = await fetch(`${serverUrl}/hello`, {
           credentials: "include",
         }).then((res) => res.json());
 

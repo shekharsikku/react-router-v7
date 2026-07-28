@@ -21,7 +21,7 @@ export const uploadFile = asyncHandler<{}, {}, {}, { uid: string }>(async (req, 
 
   const uploadResult = await filesService.uploadFile(fileData, userId);
 
-  return new HttpResponse(200, "File uploaded successfully!", { data: uploadResult }).send(res);
+  return HttpResponse.success(res, 200, "File uploaded successfully!", uploadResult);
 });
 
 export const getFile = asyncHandler<{ fid: string }, {}, {}, { action: string }>(async (req, res) => {
@@ -55,5 +55,5 @@ export const deleteFile = asyncHandler<{ fid: string }, {}, {}, { uid: string }>
 
   const deleteResult = await filesService.deleteFile(fileId, userId);
 
-  return new HttpResponse(200, "File deleted successfully!", { data: deleteResult }).send(res);
+  return HttpResponse.success(res, 200, "File deleted successfully!", deleteResult);
 });

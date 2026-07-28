@@ -9,8 +9,8 @@ class FilesService {
   private mongo: MongoClient;
   private bucket: GridFSBucket;
 
-  constructor(gridfsUri: string, dbName: string, bucketName: string) {
-    this.mongo = new MongoClient(gridfsUri, {
+  constructor(mongodbUrl: string, bucketName: string) {
+    this.mongo = new MongoClient(mongodbUrl, {
       serverApi: {
         version: ServerApiVersion.v1,
         strict: true,
@@ -26,7 +26,7 @@ class FilesService {
       logger.error({ err }, "Mongo connection error!");
     });
 
-    const database = this.mongo.db(dbName);
+    const database = this.mongo.db();
 
     this.bucket = new GridFSBucket(database, {
       bucketName,
@@ -35,7 +35,7 @@ class FilesService {
   }
 
   async connect() {
-    await this.mongo.connect();
+    return await this.mongo.connect();
   }
 
   private createId(fileId: string) {
@@ -128,4 +128,4 @@ class FilesService {
   }
 }
 
-export const filesService = new FilesService(env.GRIDFS_URI, env.GRIDFS_DB, env.GRIDFS_BKT);
+export const filesService = new FilesService(env.MONGODB_URL, env.BUCKET_NAME);

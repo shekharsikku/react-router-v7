@@ -1,15 +1,12 @@
-import { cleanEnv, str, url, num, port } from "envalid";
+import { cleanEnv, str, url, port } from "envalid";
 import "dotenv/config";
 
 const env = cleanEnv(process.env, {
-  GRIDFS_URI: url(),
-  GRIDFS_DB: str(),
-  GRIDFS_BKT: str(),
+  MONGODB_URL: url(),
+  BUCKET_NAME: str(),
 
-  COOKIES_SECRET: str(),
-  PAYLOAD_LIMIT: str(),
   CORS_ORIGIN: str(),
-  CORS_MAXAGE: num(),
+  BODY_LIMIT: str(),
   PORT: port(),
 
   NODE_ENV: str({

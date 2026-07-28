@@ -10,7 +10,7 @@ router.use("/files", filesRoutes);
 router.get("/wakeup", async (req: Request<{}, {}, {}, { from?: string }>, res: Response) => {
   const from = req.query["from"] ?? "Unknown";
   const ts = new Date().toISOString();
-  return new HttpResponse(200, `Wake up server by ${from} at ${ts}!`).send(res);
+  return HttpResponse.success(res, 200, `Wake up server by ${from} at ${ts}!`);
 });
 
 router.get("/stats", async (_req: Request, res: Response) => {
@@ -45,7 +45,7 @@ router.get("/stats", async (_req: Request, res: Response) => {
     pid: process.pid,
   };
 
-  return new HttpResponse(200, "Runtime memory stats!", { data }).send(res);
+  return HttpResponse.success(res, 200, "Runtime memory stats!", data);
 });
 
 export default router;

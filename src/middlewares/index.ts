@@ -24,7 +24,7 @@ export const limiter = (minute = 10, limit = 1000) => {
       return req.clientIp!;
     },
     handler: (req: Request) => {
-      req.log.error(`Rate limit exceeded for IP: ${req.clientIp}`);
+      req.log.error("Rate limit exceeded for ip: %s", req.clientIp);
       throw new HttpError(429, "Maximum number of requests exceeded!");
     },
   });

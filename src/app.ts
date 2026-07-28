@@ -13,8 +13,7 @@ import routers from "#/routers/index.js";
 import env from "#/utilities/env.js";
 import { HttpError, HttpResponse } from "#/utilities/response.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 
@@ -27,13 +26,13 @@ if (env.isProd) {
 app.use(pinoHttp({ logger }));
 
 /** Security */
-app.use(cors({ origin: env.CORS_ORIGIN, credentials: true, maxAge: env.CORS_MAXAGE }));
+app.use(cors({ origin: env.CORS_ORIGIN, credentials: true, maxAge: 86400 }));
 app.use(requestIp.mw());
 
 /** Parsing */
-app.use(cookieParser(env.COOKIES_SECRET));
-app.use(express.json({ limit: env.PAYLOAD_LIMIT, strict: true }));
-app.use(express.urlencoded({ limit: env.PAYLOAD_LIMIT, extended: true }));
+app.use(cookieParser());
+app.use(express.json({ limit: env.BODY_LIMIT, strict: true }));
+app.use(express.urlencoded({ limit: env.BODY_LIMIT, extended: true }));
 
 /** Compression */
 app.use(
@@ -46,14 +45,23 @@ app.use(
 );
 
 /** Static Files */
-app.use("/public/temp", express.static(join(__dirname, "../public/temp")));
+app.use(
+  express.static(join(__dirname, "../public"), {
+    maxAge: "30d",
+    immutable: true,
+  })
+);
 
 /** API Routes */
 app.use("/api", limiter(), routers);
 
-app.get("/", (req: Request<{}, {}, {}, { name?: string }>, res: Response) => {
-  const name = req.query["name"] ?? "Unknown";
-  return new HttpResponse(200, `Express + Peer says hello to ${name}!`).send(res);
+app.get("/", (_req: Request, res: Response) => {
+  return res.sendFile(join(__dirname, "../public", "index.html"), {
+    maxAge: "30d",
+    headers: {
+      "Cache-Control": "no-store, must-revalidate",
+    },
+  });
 });
 
 /** Error Handler */
@@ -61,15 +69,15 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   if (res.headersSent) return next(err);
 
   if (err instanceof MulterError) {
-    return new HttpResponse(400, err.message).send(res);
+    return HttpResponse.error(res, 400, err.message).send(res);
   }
 
   if (err instanceof HttpError) {
-    return new HttpResponse(err.code, err.message).send(res);
+    return HttpResponse.error(res, err.code, err.message).send(res);
   }
 
   req.log.error({ err }, "Unhandled server error!");
-  return new HttpResponse(500, "Internal server error!").send(res);
+  return HttpResponse.error(res, 500, "Internal server error!");
 });
 
 export default app;

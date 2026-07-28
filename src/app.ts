@@ -57,7 +57,6 @@ app.use("/api", limiter(), routers);
 
 app.get("/", (_req: Request, res: Response) => {
   return res.sendFile(join(__dirname, "../public", "index.html"), {
-    maxAge: "30d",
     headers: {
       "Cache-Control": "no-store, must-revalidate",
     },
@@ -69,11 +68,11 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   if (res.headersSent) return next(err);
 
   if (err instanceof MulterError) {
-    return HttpResponse.error(res, 400, err.message).send(res);
+    return HttpResponse.error(res, err.code === "LIMIT_FILE_SIZE" ? 413 : 400, `${err.message}!`);
   }
 
   if (err instanceof HttpError) {
-    return HttpResponse.error(res, err.code, err.message).send(res);
+    return HttpResponse.error(res, err.code, err.message);
   }
 
   req.log.error({ err }, "Unhandled server error!");

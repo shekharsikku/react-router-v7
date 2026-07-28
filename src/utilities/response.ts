@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 
 type SuccessStatusCode = 200 | 201 | 202 | 204;
-type ErrorStatusCode = 400 | 401 | 403 | 404 | 409 | 422 | 429 | 500 | 502 | 503;
+type ErrorStatusCode = 400 | 401 | 403 | 404 | 409 | 413 | 422 | 429 | 500 | 502 | 503;
 
 export class HttpError extends Error {
   constructor(

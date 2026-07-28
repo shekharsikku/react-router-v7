@@ -13,12 +13,6 @@ export const uploadFile = asyncHandler<{}, {}, {}, { uid: string }>(async (req, 
     throw new HttpError(400, "User id required!");
   }
 
-  const fileType = fileData.mimetype.toLowerCase();
-
-  if (!fileType.startsWith("image/")) {
-    throw new HttpError(403, "Only image files are allowed!");
-  }
-
   const uploadResult = await filesService.uploadFile(fileData, userId);
 
   return HttpResponse.success(res, 200, "File uploaded successfully!", uploadResult);

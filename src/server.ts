@@ -1,12 +1,17 @@
 import { createServer } from "node:http";
-import type { Request, Response } from "express";
+import { randomBytes } from "node:crypto";
 import { ExpressPeerServer } from "peer";
-import { logger } from "#/middlewares/index.js";
-import { HttpResponse } from "#/utilities/response.js";
-import env from "#/utilities/env.js";
 import app from "#/app.js";
+import env from "#/configs/env.js";
+import logger from "#/configs/logger.js";
+import { HttpResponse } from "#/utilities/response.js";
 
 const server = createServer(app);
+
+server.on("error", (err) => {
+  logger.error({ err }, "Server failed to start!");
+  process.exit(1);
+});
 
 const peerServer = ExpressPeerServer(server, {
   corsOptions: {
@@ -15,6 +20,7 @@ const peerServer = ExpressPeerServer(server, {
     maxAge: 86400,
   },
   allow_discovery: env.isDev,
+  generateClientId: () => randomBytes(12).toString("hex"),
 });
 
 peerServer.on("connection", (client) => {
@@ -27,7 +33,7 @@ peerServer.on("disconnect", (client) => {
 
 app.use("/synchronous", peerServer);
 
-app.use((req: Request, res: Response) => {
+app.use((req, res) => {
   return HttpResponse.error(res, 404, `Requested url '${req.url}' no found!`);
 });
 

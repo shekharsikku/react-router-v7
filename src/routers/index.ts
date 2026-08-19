@@ -1,19 +1,19 @@
-import { Router, type Request, type Response } from "express";
+import { Router } from "express";
 import { formatBytes, formatUptime } from "#/utilities/helpers.js";
-import { HttpResponse } from "#/utilities/response.js";
+import { asyncHandler, HttpResponse } from "#/utilities/response.js";
 import filesRoutes from "./files.js";
 
 const router = Router();
 
 router.use("/files", filesRoutes);
 
-router.get("/wakeup", async (req: Request<{}, {}, {}, { from?: string }>, res: Response) => {
+const wakeupHandler = asyncHandler<any, any, any, { from?: string }>((req, res) => {
   const from = req.query["from"] ?? "Unknown";
   const ts = new Date().toISOString();
   return HttpResponse.success(res, 200, `Wake up server by ${from} at ${ts}!`);
 });
 
-router.get("/stats", async (_req: Request, res: Response) => {
+const statsHandler = asyncHandler((_req, res) => {
   const memory = process.memoryUsage();
 
   const data = {
@@ -47,5 +47,8 @@ router.get("/stats", async (_req: Request, res: Response) => {
 
   return HttpResponse.success(res, 200, "Runtime memory stats!", data);
 });
+
+router.get("/wakeup", wakeupHandler);
+router.get("/stats", statsHandler);
 
 export default router;

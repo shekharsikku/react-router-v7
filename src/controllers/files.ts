@@ -1,9 +1,9 @@
 import { filesService } from "#/services/files.js";
 import { HttpError, HttpResponse, asyncHandler } from "#/utilities/response.js";
 
-export const uploadFile = asyncHandler<{}, {}, {}, { uid: string }>(async (req, res) => {
+export const uploadFile = asyncHandler<any, any, any, { uid: string }>(async (req, res) => {
   const fileData = req.file;
-  const userId = req.query["uid"];
+  const userId = req.query.uid;
 
   if (!fileData) {
     throw new HttpError(400, "Invalid file for upload!");
@@ -18,9 +18,9 @@ export const uploadFile = asyncHandler<{}, {}, {}, { uid: string }>(async (req, 
   return HttpResponse.success(res, 200, "File uploaded successfully!", uploadResult);
 });
 
-export const getFile = asyncHandler<{ fid: string }, {}, {}, { action: string }>(async (req, res) => {
-  const fileId = req.params["fid"];
-  const action = req.query["action"];
+export const getFile = asyncHandler<{ fid: string }, any, any, { action: string }>(async (req, res) => {
+  const fileId = req.params.fid;
+  const action = req.query.action;
 
   const { fileData, fileStream } = await filesService.getFile(fileId);
 
@@ -43,9 +43,9 @@ export const getFile = asyncHandler<{ fid: string }, {}, {}, { action: string }>
   return fileStream.pipe(res);
 });
 
-export const deleteFile = asyncHandler<{ fid: string }, {}, {}, { uid: string }>(async (req, res) => {
-  const fileId = req.params["fid"];
-  const userId = req.query["uid"];
+export const deleteFile = asyncHandler<{ fid: string }, any, any, { uid: string }>(async (req, res) => {
+  const fileId = req.params.fid;
+  const userId = req.query.uid;
 
   const deleteResult = await filesService.deleteFile(fileId, userId);
 

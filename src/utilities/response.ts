@@ -1,4 +1,4 @@
-import type { Request, Response, NextFunction } from "express";
+import type { RequestHandler, Response } from "express";
 
 type SuccessStatusCode = 200 | 201 | 202 | 204;
 type ErrorStatusCode = 400 | 401 | 403 | 404 | 409 | 413 | 422 | 429 | 500 | 502 | 503;
@@ -21,28 +21,20 @@ export class HttpResponse {
   static success<T>(res: Response, code: SuccessStatusCode, message: string, data?: T) {
     const response: SuccessResponse<T> = { success: true, message };
     if (data !== undefined) response.data = data;
-    return res.status(code).json(response);
+    res.status(code).json(response);
   }
 
   static error<E>(res: Response, code: ErrorStatusCode, message: string, error?: E) {
     const response: ErrorResponse<E> = { success: false, message };
     if (error !== undefined) response.error = error;
-    return res.status(code).json(response);
+    res.status(code).json(response);
   }
 }
 
-export const asyncHandler = <P = {}, ResBody = unknown, ReqBody = unknown, ReqQuery = {}>(
-  func: (
-    req: Request<P, ResBody, ReqBody, ReqQuery>,
-    res: Response<ResBody>,
-    next: NextFunction
-  ) => void | Response | Promise<void | Response>
-) => {
-  return async (req: Request<P, ResBody, ReqBody, ReqQuery>, res: Response<ResBody>, next: NextFunction) => {
-    try {
-      return await func(req, res, next);
-    } catch (err) {
-      return next(err);
-    }
+export const asyncHandler = <P, ResBody, ReqBody, ReqQuery>(
+  fn: RequestHandler<P, ResBody, ReqBody, ReqQuery>
+): RequestHandler<P, ResBody, ReqBody, ReqQuery> => {
+  return (req, res, next) => {
+    Promise.try(() => fn(req, res, next)).catch(next);
   };
 };

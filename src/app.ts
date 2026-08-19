@@ -1,70 +1,98 @@
-import type { NextFunction, Request, Response } from "express";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import express from "express";
+import express, { type ErrorRequestHandler } from "express";
 import { MulterError } from "multer";
 import { pinoHttp } from "pino-http";
 import requestIp from "request-ip";
-import { limiter, logger } from "#/middlewares/index.js";
-import routers from "#/routers/index.js";
-import env from "#/utilities/env.js";
+import env from "#/configs/env.js";
+import limiter from "#/configs/limiter.js";
+import logger from "#/configs/logger.js";
+import router from "#/routers/index.js";
 import { HttpError, HttpResponse } from "#/utilities/response.js";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 
-/** Trust Proxy */
 if (env.isProd) {
   app.set("trust proxy", 1);
 }
 
-/** Logging */
 app.use(pinoHttp({ logger }));
 
-/** Security */
-app.use(cors({ origin: env.CORS_ORIGIN, credentials: true, maxAge: 86400 }));
+app.use(
+  cors({
+    origin: env.CORS_ORIGIN,
+    credentials: true,
+    maxAge: 86400,
+  })
+);
+
 app.use(requestIp.mw());
 
-/** Parsing */
 app.use(cookieParser());
-app.use(express.json({ limit: env.BODY_LIMIT, strict: true }));
-app.use(express.urlencoded({ limit: env.BODY_LIMIT, extended: true }));
 
-/** Compression */
+app.use(
+  express.json({
+    limit: env.BODY_LIMIT,
+    strict: true,
+  })
+);
+
+app.use(
+  express.urlencoded({
+    limit: env.BODY_LIMIT,
+    extended: true,
+  })
+);
+
 app.use(
   compression({
-    filter: (req: Request, res: Response) => {
+    filter: (req, res) => {
       if (req.headers.accept === "text/event-stream") return false;
       return compression.filter(req, res);
     },
   })
 );
 
-/** Static Files */
-app.use(
-  express.static(join(__dirname, "../public"), {
-    maxAge: "30d",
-    immutable: true,
-  })
-);
+const __static = resolve(__dirname, "../public");
 
-/** API Routes */
-app.use("/api", limiter(), routers);
+if (env.isProd) {
+  app.use(
+    express.static(__static, {
+      maxAge: "30d",
+      immutable: true,
+    })
+  );
+}
 
-app.get("/", (_req: Request, res: Response) => {
-  return res.sendFile(join(__dirname, "../public", "index.html"), {
-    headers: {
-      "Cache-Control": "no-store, must-revalidate",
+app.use("/api", limiter(), router);
+
+app.get("/", (_req, res) => {
+  if (env.isDev) {
+    return HttpResponse.success(res, 200, "Welcome to Synchronous Peer!");
+  }
+
+  return res.sendFile(
+    join(__static, "index.html"),
+    {
+      headers: {
+        "Cache-Control": "no-store, must-revalidate",
+      },
     },
-  });
+    (err) => {
+      if (err && !res.headersSent) {
+        return HttpResponse.error(res, 404, "Static file not found!");
+      }
+    }
+  );
 });
 
-/** Error Handler */
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+app.use(((err, req, res, next) => {
   if (res.headersSent) return next(err);
 
   if (err instanceof MulterError) {
@@ -77,6 +105,6 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 
   req.log.error({ err }, "Unhandled server error!");
   return HttpResponse.error(res, 500, "Internal server error!");
-});
+}) as ErrorRequestHandler);
 
 export default app;

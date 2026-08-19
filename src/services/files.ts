@@ -1,9 +1,9 @@
 import { Readable } from "node:stream";
 import { GridFSBucket, MongoClient, ObjectId, ServerApiVersion, type GridFSFile } from "mongodb";
-import { logger } from "#/middlewares/index.js";
-import { HttpError } from "#/utilities/response.js";
-import env from "#/utilities/env.js";
 import sharp from "sharp";
+import env from "#/configs/env.js";
+import logger from "#/configs/logger.js";
+import { HttpError } from "#/utilities/response.js";
 
 class FilesService {
   private mongo: MongoClient;

@@ -1,8 +1,8 @@
 import { filesService } from "#/services/files.js";
-import { logger } from "#/middlewares/index.js";
-import jobs from "#/services/jobs.js";
-import env from "#/utilities/env.js";
+import env from "#/configs/env.js";
+import logger from "#/configs/logger.js";
 import server from "#/server.js";
+import jobs from "#/services/jobs.js";
 
 const port = env.PORT;
 

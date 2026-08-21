@@ -4,9 +4,9 @@ Real-time communication infrastructure for synchronous applications. The server 
 
 ### **Details**
 
-| Service  | Synchronous Peer |
-|---|---|
-| Protocol | HTTP / WebSocket |
+| Service  | Synchronous Peer      |
+| -------- | --------------------- |
+| Protocol | HTTP / WebSocket      |
 | Endpoint | `/synchronous/peerjs` |
 
 ---

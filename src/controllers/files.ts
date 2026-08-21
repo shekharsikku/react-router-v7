@@ -18,7 +18,7 @@ export const uploadFile = asyncHandler<any, any, any, { uid: string }>(async (re
   return HttpResponse.success(res, 200, "File uploaded successfully!", uploadResult);
 });
 
-export const getFile = asyncHandler<{ fid: string }, any, any, { action: string }>(async (req, res) => {
+export const getFile = asyncHandler<{ fid: string }, any, any, { action: string }>(async (req, res, next) => {
   const fileId = req.params.fid;
   const action = req.query.action;
 
@@ -34,10 +34,11 @@ export const getFile = asyncHandler<{ fid: string }, any, any, { action: string 
     ETag: fileData._id.toString(),
   });
 
-  fileStream.on("error", () => {
+  fileStream.once("error", (err) => {
     if (!res.headersSent) {
-      throw new HttpError(500, "Failed to stream file!");
+      return next(new HttpError(500, "Failed to stream file!"));
     }
+    return res.destroy(err);
   });
 
   return fileStream.pipe(res);
